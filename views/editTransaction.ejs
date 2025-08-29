@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Transaction</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-4">
+    <h2>Edit Transaction</h2>
+    <form action="/edit/<%= transaction.id %>" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Amount</label>
+        <input type="number" step="0.01" name="amount" class="form-control" value="<%= transaction.amount %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Type</label>
+        <select name="transaction_type" class="form-control">
+          <option value="expense" <%= transaction.transaction_type === 'expense' ? 'selected' : '' %>>Expense</option>
+          <option value="income" <%= transaction.transaction_type === 'income' ? 'selected' : '' %>>Income</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category_id" class="form-control">
+          <% categories.forEach(c => { %>
+            <option value="<%= c.id %>" <%= transaction.category_id === c.id ? 'selected' : '' %>><%= c.category_name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" name="description" class="form-control" value="<%= transaction.description %>">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Date & Time</label>
+        <input type="datetime-local" name="transaction_time" class="form-control" value="<%= new Date(transaction.transaction_time).toISOString().slice(0,16) %>" required>
+      </div>
+      <button class="btn btn-success">Update</button>
+    </form>
+  </div>
+</body>
+</html>
