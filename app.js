@@ -108,13 +108,38 @@ app.post('/login', async (req, res) => {
     email: user.email
   };
 
-  res.redirect('/');
+  res.redirect('/dashboard');
 });
 
 // 🚪 Logout
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login');
+  });
+});
+
+// 📊 Dashboard
+app.get('/dashboard', ensureAuth, async (req, res) => {
+  const userId = req.session.user.id;
+
+  // calculate summary
+  const result = await pool.query(`
+    SELECT transaction_type, SUM(amount)::float AS total
+    FROM transactions
+    WHERE user_id = $1
+    GROUP BY transaction_type
+  `, [userId]);
+
+  let income = 0, expense = 0;
+  result.rows.forEach(r => {
+    if (r.transaction_type === 'income') income = r.total;
+    if (r.transaction_type === 'expense') expense = r.total;
+  });
+  const balance = income - expense;
+
+  res.render('dashboard', {
+    user: req.session.user,
+    summary: { income, expense, balance }
   });
 });
 

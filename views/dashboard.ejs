@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - SpendSmart</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Welcome, <%= user.full_name %> 🎉</h1>
+    <p>Email: <%= user.email %></p>
+
+    <h3>Summary</h3>
+    <ul>
+      <li>Income: <%= summary.income %></li>
+      <li>Expense: <%= summary.expense %></li>
+      <li>Balance: <%= summary.balance %></li>
+    </ul>
+
+    <a href="/">View Transactions</a> | 
+    <a href="/logout">Logout</a>
+  </div>
+</body>
+</html>

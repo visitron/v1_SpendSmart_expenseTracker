@@ -144,8 +144,4 @@ vite.config.ts.timestamp-*
 <<<<<<< HEAD
 =======
 
-# Temporary folders
-package.json
-package-lock.json
-yarn.lock
 >>>>>>> f31c813 (removed package)
