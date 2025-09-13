@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SpendSmart - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Optional local stylesheet retained for overrides -->
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <style>
+    :root{
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --card-radius:12px;
+      --glass: rgba(255,255,255,0.7);
+    }
+    body{ font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background:#f7f9fb; color:#111; }
+    .sidebar { width:220px; min-height:100vh; position:fixed; left:0; top:0; padding:20px; background:white; border-right:1px solid #eef2f6; }
+    .main { margin-left:220px; padding:24px; }
+    .brand { font-weight:700; color:var(--accent); letter-spacing:0.2px; }
+    .summary-card { border-radius:var(--card-radius); box-shadow: 0 6px 18px rgba(36,59,85,0.04); }
+    .muted { color:var(--muted); }
+    .table .badge-category { font-size:0.75rem; padding:.35em .5em; border-radius:8px; }
+    @media (max-width: 991px){ .sidebar{ position:relative; width:100%; border-right:none; border-bottom:1px solid #eef2f6 } .main{ margin-left:0; } }
+
+    /* Chatbot styles (from index2) */
+    #chatbot-toggle {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 56px; height: 56px;
+      border-radius: 50%; background: var(--accent);
+      color: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000; font-size: 22px;
+    }
+    #chatbot {
+      position: fixed; bottom: 90px; right: 20px;
+      width: 320px; max-height: 420px;
+      background: white; border-radius: var(--card-radius);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      display: none; flex-direction: column;
+      overflow: hidden; z-index: 1000;
+    }
+    #chatbot-header {
+      background: var(--accent); color: white;
+      padding: 10px 14px; font-weight: 600;
+    }
+    #chatbot-messages {
+      flex: 1; overflow-y: auto; padding: 10px;
+      font-size: 0.9rem;
+    }
+    .chat-msg { margin-bottom: 8px; }
+    .chat-user { text-align: right; color: var(--accent); }
+    .chat-bot { text-align: left; color: #333; }
+    #chatbot-input {
+      display: flex; border-top: 1px solid #ddd;
+    }
+    #chatbot-input input {
+      flex: 1; border: none; padding: 10px;
+      font-size: 0.9rem; outline: none;
+    }
+    #chatbot-input button {
+      border: none; background: var(--accent);
+      color: white; padding: 0 16px;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar d-none d-lg-block">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <div class="rounded-circle bg-light p-2"><i class="fa-solid fa-piggy-bank fa-lg text-primary"></i></div>
+      <div>
+        <div class="brand">SpendSmart</div>
+        <div class="muted small">Personal finance</div>
+      </div>
+    </div>
+
+    <nav class="nav flex-column">
+      <a class="nav-link py-2 active" href="#"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a>
+      <a class="nav-link py-2" href="/transactions"><i class="fa-solid fa-list-check me-2"></i> Transactions</a>
+      <a class="nav-link py-2" href="/budgets"><i class="fa-solid fa-wallet me-2"></i> Budgets</a>
+      <a class="nav-link py-2" href="/reports"><i class="fa-solid fa-file-invoice-dollar me-2"></i> Reports</a>
+      <a class="nav-link py-2" href="/settings"><i class="fa-solid fa-gear me-2"></i> Settings</a>
+    </nav>
+
+    <div class="mt-4 small muted">
+      Tip: click <strong>+ Add Transaction</strong> to quickly log spending.
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+      <div>
+        <h1 class="h4 mb-0">Dashboard</h1>
+        <div class="muted small">Welcome back, <strong><%= user.full_name %></strong></div>
+      </div>
+
+      <div class="d-flex gap-2 align-items-center w-100 w-md-auto">
+        <!-- Month selector (server can set `currentMonth` if desired) -->
+        <select id="monthSelect" class="form-select form-select-sm me-2" style="width:180px;">
+          <option selected>Last 30 days</option>
+          <option>This month</option>
+          <option>Last month</option>
+          <option>Custom range</option>
+        </select>
+
+        <div class="input-group input-group-sm me-2" style="width:260px;">
+          <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input id="tableSearch" type="text" class="form-control" placeholder="Search transactions, category, description...">
+        </div>
+
+        <a href="/add" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-1"></i> Add</a>
+        <a href="/logout" class="btn btn-sm btn-outline-danger ms-1 d-none d-md-inline">Logout</a>
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-sm-6 col-md-4">
+        <div class="card summary-card p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <small class="muted">Total Income</small>
+              <div class="h5 mt-1" id="incomeAmt">₹ <%= (summary.income || 0).toFixed(2) %></div>
+            </div>
+            <div class="text-success">
+              <i class="fa-solid fa-arrow-down-left fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-4">
+        <div class="card summary-card p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <small class="muted">Total Expense</small>
+              <div class="h5 mt-1" id="expenseAmt">₹ <%= (summary.expense || 0).toFixed(2) %></div>
+            </div>
+            <div class="text-danger">
+              <i class="fa-solid fa-arrow-up-right fa-2x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-md-4">
+        <div class="card summary-card p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <small class="muted">Balance</small>
+              <div class="h5 mt-1" id="balanceAmt">₹ <%= (summary.balance || 0).toFixed(2) %></div>
+            </div>
+            <div class="text-primary">
+              <i class="fa-solid fa-wallet fa-2x"></i>
+            </div>
+          </div>
+          <div class="small muted mt-2">Based on selected period</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart & Quick actions -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-6">
+        <div class="card p-3 summary-card h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Income vs Expense</h6>
+            <div class="muted small">Breakdown</div>
+          </div>
+          <div class="d-flex justify-content-center align-items-center" style="min-height:240px;">
+            <canvas id="summaryChart" style="max-width:100%;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card p-3 summary-card h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Quick Actions</h6>
+            <div class="muted small">Shortcuts</div>
+          </div>
+
+          <div class="d-flex flex-column gap-2">
+            <a href="/add?type=expense" class="btn btn-outline-danger"> <i class="fa-solid fa-cart-shopping me-2"></i> Add Expense</a>
+            <a href="/add?type=income" class="btn btn-outline-success"> <i class="fa-solid fa-hand-holding-dollar me-2"></i> Add Income</a>
+            <button id="exportCsvBtn" class="btn btn-outline-secondary"> <i class="fa-solid fa-file-export me-2"></i> Export CSV</button>
+            <a href="/reports" class="btn btn-outline-primary"> <i class="fa-solid fa-chart-pie me-2"></i> View Reports</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="card p-3 summary-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Recent Transactions</h5>
+        <div class="muted small">Showing <strong id="txCount"><%= transactions.length %></strong> items</div>
+      </div>
+
+      <div class="table-responsive">
+        <table id="txTable" class="table table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th style="min-width:120px">Amount</th>
+              <th style="min-width:110px">Type</th>
+              <th>Description</th>
+              <th style="min-width:140px">Category</th>
+              <th style="min-width:160px">Date</th>
+              <th style="min-width:120px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="txBody">
+            <% transactions.forEach(tx => { %>
+              <tr data-desc="<%= (tx.description || '').toLowerCase() %>" data-cat="<%= (tx.category_name || '').toLowerCase() %>">
+                <td data-amount="<%= tx.amount %>">
+                  <div class="d-flex flex-column">
+                    <div class="fw-semibold">₹ <span class="raw-amt"><%= tx.amount %></span></div>
+                    <small class="muted"><%= tx.note || '' %></small>
+                  </div>
+                </td>
+                <td>
+                  <% if(tx.transaction_type && tx.transaction_type.toLowerCase() === 'income') { %>
+                    <span class="badge bg-success">Income</span>
+                  <% } else { %>
+                    <span class="badge bg-danger">Expense</span>
+                  <% } %>
+                </td>
+                <td><%= tx.description %></td>
+                <td>
+                  <% if(tx.category_name) { %>
+                    <span class="badge bg-light text-dark badge-category"><i class="fa-solid fa-tag me-1"></i> <%= tx.category_name %></span>
+                  <% } else { %>
+                    <span class="muted small">N/A</span>
+                  <% } %>
+                </td>
+                <td><%= new Date(tx.transaction_time).toLocaleString() %></td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a href="/edit/<%= tx.id %>" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form action="/delete/<%= tx.id %>" method="POST" class="d-inline ms-1 delete-form">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="mt-4 small muted text-center">Made with ♥ • SpendSmart</footer>
+  </main>
+
+  <!-- Chatbot Widget (from index2) -->
+  <button id="chatbot-toggle"><i class="fa-solid fa-comments"></i></button>
+  <div id="chatbot" role="dialog" aria-label="SpendSmart chat">
+    <div id="chatbot-header">💬 SpendSmart AI</div>
+    <div id="chatbot-messages" aria-live="polite" aria-atomic="false"></div>
+    <div id="chatbot-input">
+      <input type="text" id="chatbot-text" placeholder="Ask about your finances..." aria-label="Chat input" />
+      <button id="chatbot-send" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Client-side helpers (keeps server EJS intact) -->
+  <script>
+    // format currency displayed in table (server gives raw numbers)
+    (function formatAmounts(){
+      const formatter = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:2 });
+      document.querySelectorAll('.raw-amt').forEach(el => {
+        const n = Number(el.textContent || '0');
+        if(!isNaN(n)) el.textContent = formatter.format(n).replace('₹', '').trim();
+      });
+      // update totals in case server changed them (they're already formatted)
+      // (left intentionally minimal - server values are primary)
+    })();
+
+    // search/filter table client-side
+    document.getElementById('tableSearch').addEventListener('input', function(){
+      const q = this.value.trim().toLowerCase();
+      const rows = document.querySelectorAll('#txBody tr');
+      let visible = 0;
+      rows.forEach(r => {
+        const desc = r.getAttribute('data-desc') || '';
+        const cat = r.getAttribute('data-cat') || '';
+        const matches = !q || desc.includes(q) || cat.includes(q);
+        r.style.display = matches ? '' : 'none';
+        if(matches) visible++;
+      });
+      document.getElementById('txCount').textContent = visible;
+    });
+
+    // intercept delete forms and confirm
+    document.querySelectorAll('.delete-form').forEach(f => {
+      f.addEventListener('submit', function(ev){
+        if(!confirm('Delete this transaction? This action cannot be undone.')) ev.preventDefault();
+      });
+    });
+
+    // CSV export (client side - simple)
+    document.getElementById('exportCsvBtn').addEventListener('click', function(){
+      const rows = [['Amount','Type','Description','Category','Date']];
+      document.querySelectorAll('#txBody tr').forEach(tr => {
+        if(tr.style.display === 'none') return; // skip filtered
+        const cols = tr.querySelectorAll('td');
+        const amount = cols[0].innerText.replace(/\n/g,' ').trim();
+        const type = cols[1].innerText.trim();
+        const desc = cols[2].innerText.trim();
+        const cat = cols[3].innerText.trim();
+        const date = cols[4].innerText.trim();
+        rows.push([amount, type, `"${desc.replace(/"/g,'""')}"`, `"${cat.replace(/"/g,'""')}"`, `"${date}"`]);
+      });
+      const csv = rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Chart.js donut (uses server-side summary values)
+    (function renderChart(){
+      const income = Number(<%= summary.income || 0 %>);
+      const expense = Number(<%= summary.expense || 0 %>);
+      const ctxEl = document.getElementById('summaryChart');
+      if(!ctxEl) return;
+      const ctx = ctxEl.getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Income', 'Expense'],
+          datasets: [{
+            data: [income, expense],
+            backgroundColor: ['#28a745', '#dc3545'],
+            borderColor: ['rgba(0,0,0,0.04)', 'rgba(0,0,0,0.04)'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          layout: { padding: 8 }
+        }
+      });
+    })();
+  </script>
+
+  <!-- Chatbot logic (from index2) -->
+  <script>
+    const toggleBtn = document.getElementById('chatbot-toggle');
+    const chatbot = document.getElementById('chatbot');
+    const messages = document.getElementById('chatbot-messages');
+    const input = document.getElementById('chatbot-text');
+    const sendBtn = document.getElementById('chatbot-send');
+
+    toggleBtn.addEventListener('click', () => {
+      chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
+      // focus input when opened
+      if(chatbot.style.display === 'flex') setTimeout(() => input.focus(), 120);
+    });
+
+    function appendMessage(text, sender='bot') {
+      const div = document.createElement('div');
+      div.className = 'chat-msg ' + (sender === 'user' ? 'chat-user' : 'chat-bot');
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const q = input.value.trim();
+      if(!q) return;
+      appendMessage(q, 'user');
+      input.value = '';
+
+      appendMessage('...', 'bot'); // placeholder
+
+      try {
+        const res = await fetch('/api/chat', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ message: q })   // send { message }
+        });
+        const data = await res.json();
+        messages.lastChild.textContent = data.reply || '[No response]';
+      } catch(e) {
+        messages.lastChild.textContent = '⚠️ Error contacting chatbot.';
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => {
+      if(e.key === 'Enter') sendMessage();
+    });
+  </script>
+</body>
+</html>
