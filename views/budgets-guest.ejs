@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budgets | SpendSmart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --success: #10b981;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .page-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1.05rem;
+    }
+
+    .container-main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .upgrade-card {
+      background: white;
+      border-radius: 20px;
+      padding: 4rem 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .upgrade-icon {
+      font-size: 4rem;
+      color: var(--success);
+      margin-bottom: 1.5rem;
+    }
+
+    .upgrade-card h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    .upgrade-card p {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+      text-align: left;
+    }
+
+    .feature-item {
+      padding: 1.5rem;
+      background: var(--light);
+      border-radius: 15px;
+      border-left: 4px solid var(--success);
+    }
+
+    .feature-item i {
+      font-size: 1.8rem;
+      color: var(--success);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .feature-item h5 {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .btn-upgrade {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      color: white;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem;
+    }
+
+    .btn-upgrade:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+      color: white;
+    }
+
+    .btn-back {
+      background: white;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .button-group {
+      margin-top: 2rem;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+
+    .back-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .back-link:hover {
+      color: var(--dark);
+      transform: translateX(-5px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container-main">
+      <h1><i class="fas fa-wallet me-2"></i>Budget Management</h1>
+      <p>Smart spending control</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-main">
+    <a href="/" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="upgrade-card">
+      <div class="upgrade-icon">
+        <i class="fas fa-star"></i>
+      </div>
+      <h2>Budget Management is a Premium Feature</h2>
+      <p><%= message %></p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fas fa-bullseye"></i>
+          <h5>Overall Budget</h5>
+          <p>Set a monthly spending limit for your entire account</p>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-chart-pie"></i>
+          <h5>Category Budgets</h5>
+          <p>Control spending by category with separate limits</p>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-bell"></i>
+          <h5>Smart Alerts</h5>
+          <p>Get notified when you exceed budget limits</p>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-history"></i>
+          <h5>Budget Tracking</h5>
+          <p>Persistent budget data saved permanently</p>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <a href="/register" class="btn-upgrade">
+          <i class="fas fa-user-plus"></i>Create Free Account
+        </a>
+        <a href="/" class="btn-back">
+          <i class="fas fa-arrow-left"></i>Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -2,62 +2,263 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add Transaction</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Add Transaction | SpendSmart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+    
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: var(--dark);
+    }
+
+    .form-container {
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .form-header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .form-body {
+      padding: 2.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.7rem;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      padding: 12px 16px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.2rem rgba(75, 85, 99, 0.15);
+      outline: none;
+    }
+
+    .form-control::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      padding: 13px 30px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      width: 100%;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(75, 85, 99, 0.4);
+      color: white;
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .form-footer {
+      text-align: center;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--light);
+      background: #f9fafb;
+    }
+
+    .form-footer p {
+      margin: 0;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .form-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .form-footer a:hover {
+      color: #4b5563;
+      text-decoration: underline;
+    }
+
+    .form-icon {
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow-sm rounded">
-          <div class="card-body">
-            <h3 class="card-title mb-4 text-center">Add Transaction</h3>
+  <div class="form-container">
+    <div class="form-card">
+      <div class="form-header">
+        <h1><i class="fas fa-plus-circle me-2"></i>Add Transaction</h1>
+        <p>Log a new income or expense</p>
+      </div>
 
-            <form method="POST" action="/add">
-              <div class="mb-3">
-                <label for="amount" class="form-label">Amount</label>
-                <input type="number" step="0.01" name="amount" class="form-control" required>
-              </div>
-
-              <div class="mb-3">
-                <label for="transaction_type" class="form-label">Type</label>
-                <select name="transaction_type" class="form-select" required>
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="3"></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="category_id" class="form-label">Category</label>
-                <select name="category_id" class="form-select" required>
-                  <% categories.forEach(cat => { %>
-                    <option value="<%= cat.id %>"><%= cat.category_name %></option>
-                  <% }) %>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="transaction_time" class="form-label">Transaction Date & Time</label>
-                <input type="datetime-local" name="transaction_time" class="form-control" required>
-              </div>
-
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Add Transaction</button>
-              </div>
-            </form>
-
+      <div class="form-body">
+        <form method="POST" action="/add" id="transactionForm">
+          <!-- Amount -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dollar-sign form-icon"></i>Amount
+            </label>
+            <input type="number" step="0.01" name="amount" class="form-control" placeholder="0.00" required>
           </div>
-        </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-exchange-alt form-icon"></i>Type
+            </label>
+            <select name="transactionType" class="form-select" required>
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-tag form-icon"></i>Category
+            </label>
+            <select name="categoryId" id="categorySelect" class="form-select" required>
+              <option value="">Select a category</option>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat.id %>" data-name="<%= cat.category_name %>"><%= cat.category_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-note-sticky form-icon"></i>Description
+            </label>
+            <textarea name="description" class="form-control" placeholder="Add details about this transaction..."></textarea>
+          </div>
+
+          <!-- Date & Time -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-calendar form-icon"></i>Date & Time
+            </label>
+            <input type="datetime-local" name="transactionDate" class="form-control" required>
+          </div>
+
+          <!-- Submit Buttons -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <button type="submit" name="submitType" value="direct" class="btn btn-submit" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+              <i class="fas fa-plus me-2"></i>Add Transaction
+            </button>
+            <button type="submit" name="submitType" value="payment" class="btn btn-submit" style="background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);">
+              <i class="fas fa-credit-card me-2"></i>Pay with Razorpay
+            </button>
+          </div>
+        </form>
+
+        <script>
+          document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            const submitType = e.submitter?.value;
+            if (submitType === 'direct') {
+              this.action = '/add';
+            } else if (submitType === 'payment') {
+              this.action = '/initiate-payment';
+            }
+          });
+        </script>
+      </div>
+
+      <div class="form-footer">
+        <p><a href="/">← Back to Dashboard</a></p>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS (Optional, only if using JS features) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment | SpendSmart - Secure Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f97316;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .container-main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .payment-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .transaction-summary {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      border-left: 5px solid var(--accent);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .summary-row:last-child {
+      margin-bottom: 0;
+      border-top: 2px solid white;
+      padding-top: 1rem;
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
+
+    .summary-label {
+      color: var(--primary);
+    }
+
+    .summary-value {
+      font-weight: 700;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section h5 {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group-custom {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group-custom label {
+      display: block;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group-custom input,
+    .form-group-custom select {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      padding: 0.7rem 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group-custom input:focus,
+    .form-group-custom select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.2rem rgba(75, 85, 99, 0.15);
+      outline: none;
+    }
+
+    .form-group-custom input::placeholder {
+      color: var(--primary);
+    }
+
+    .security-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--success);
+      margin-bottom: 1.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--success);
+    }
+
+    .btn-pay {
+      width: 100%;
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+    }
+
+    .btn-pay:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(75, 85, 99, 0.3);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+      color: var(--dark);
+      transform: translateX(-5px);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .divider span {
+      position: relative;
+      background: white;
+      padding: 0 1rem;
+      z-index: 1;
+    }
+
+    .razorpay-logo {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .razorpay-logo img {
+      height: 30px;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 1rem;
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .payment-card {
+        padding: 1.5rem;
+      }
+
+      .container-main {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container-main">
+      <h1><i class="fas fa-credit-card me-2"></i>Secure Payment</h1>
+      <p>Complete your payment securely via Razorpay</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-main">
+    <a href="/add" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Back to Add Transaction
+    </a>
+
+    <div class="payment-card">
+      <!-- Transaction Summary -->
+      <div class="transaction-summary">
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-exchange me-2"></i>Transaction Type</span>
+          <span class="summary-value" style="text-transform: capitalize; color: <%= transactionType === 'income' ? '#10b981' : '#ef4444' %>;">
+            <%= transactionType %>
+          </span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-tag me-2"></i>Category</span>
+          <span class="summary-value"><%= category %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-align-left me-2"></i>Description</span>
+          <span class="summary-value"><%= description %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><i class="fas fa-rupee-sign me-2"></i>Amount</span>
+          <span class="summary-value">₹<%= parseFloat(amount).toFixed(2) %></span>
+        </div>
+      </div>
+
+      <!-- Security Info -->
+      <div class="security-info">
+        <i class="fas fa-lock"></i>
+        <span>Your payment is secured with 256-bit SSL encryption</span>
+      </div>
+
+      <!-- Payment Form -->
+      <form id="paymentForm" method="POST" action="/process-payment">
+        <div class="form-section">
+          <h5><i class="fas fa-user me-2"></i>Your Details</h5>
+          
+          <div class="form-group-custom">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="John Doe" required value="<%= userName %>">
+          </div>
+
+          <div class="form-group-custom">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required value="<%= userEmail %>">
+          </div>
+
+          <div class="form-group-custom">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="9876543210" pattern="[0-9]{10}" required>
+          </div>
+        </div>
+
+        <!-- Hidden Fields for Transaction Data -->
+        <input type="hidden" name="amount" value="<%= amount %>">
+        <input type="hidden" name="transactionType" value="<%= transactionType %>">
+        <input type="hidden" name="category" value="<%= category %>">
+        <input type="hidden" name="categoryId" value="<%= categoryId %>">
+        <input type="hidden" name="description" value="<%= description %>">
+        <input type="hidden" name="transactionDate" value="<%= transactionDate %>">
+
+        <!-- Razorpay Button -->
+        <button type="button" class="btn-pay" id="rzp-button">
+          <i class="fas fa-lock me-2"></i>Pay ₹<%= parseFloat(amount).toFixed(2) %> with Razorpay
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>Powered by</span>
+      </div>
+
+      <!-- Razorpay Logo -->
+      <div class="razorpay-logo">
+        <p style="font-size: 0.85rem; color: var(--primary); margin-bottom: 0;">
+          <i class="fas fa-check-circle" style="color: var(--success);"></i> Trusted by millions of users worldwide
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Razorpay Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    const rzpButton = document.getElementById('rzp-button');
+    const paymentForm = document.getElementById('paymentForm');
+
+    rzpButton.addEventListener('click', async function(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const amount = paymentForm.amount.value;
+
+      // Validate form
+      if (!fullName || !email || !phone) {
+        alert('Please fill in all details');
+        return;
+      }
+
+      try {
+        // Create order on backend
+        const orderResponse = await fetch('/create-payment-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            amount: parseFloat(amount),
+            description: paymentForm.description.value,
+            userEmail: email,
+            fullName: fullName
+          })
+        });
+
+        const orderData = await orderResponse.json();
+
+        if (!orderData.success) {
+          alert('Error creating payment order: ' + orderData.message);
+          return;
+        }
+
+        // Razorpay Options
+        const options = {
+          key: '<%= razorpayKeyId %>',
+          amount: Math.round(amount * 100), // Convert to paisa
+          currency: 'INR',
+          name: 'SpendSmart',
+          description: paymentForm.description.value,
+          order_id: orderData.orderId,
+          handler: function(response) {
+            // Payment successful
+            verifyPayment(response);
+          },
+          prefill: {
+            name: fullName,
+            email: email,
+            contact: phone
+          },
+          theme: {
+            color: '#4b5563'
+          },
+          modal: {
+            ondismiss: function() {
+              console.log('Payment modal closed');
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function(response) {
+          alert('Payment failed: ' + response.error.description);
+          console.error(response.error);
+        });
+
+        rzp.open();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error processing payment: ' + error.message);
+      }
+    });
+
+    async function verifyPayment(paymentResponse) {
+      try {
+        const verifyResponse = await fetch('/verify-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            orderId: paymentResponse.razorpay_order_id,
+            paymentId: paymentResponse.razorpay_payment_id,
+            signature: paymentResponse.razorpay_signature,
+            amount: paymentForm.amount.value,
+            transactionType: paymentForm.transactionType.value,
+            categoryId: paymentForm.categoryId.value,
+            description: paymentForm.description.value,
+            transactionDate: paymentForm.transactionDate.value
+          })
+        });
+
+        const result = await verifyResponse.json();
+
+        if (result.success) {
+          // Show success message
+          showSuccessModal(result.transactionId);
+        } else {
+          alert('Payment verification failed: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error verifying payment:', error);
+        alert('Error verifying payment: ' + error.message);
+      }
+    }
+
+    function showSuccessModal(transactionId) {
+      const modal = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+          <div style="background: white; padding: 3rem; border-radius: 15px; text-align: center; max-width: 500px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 style="color: #1f2937; margin-bottom: 1rem; font-weight: 700;">Payment Successful!</h2>
+            <p style="color: #6b7280; margin-bottom: 0.5rem;">Your transaction has been recorded successfully.</p>
+            <p style="color: #6b7280; margin-bottom: 2rem; font-size: 0.9rem;">Transaction ID: <strong>${transactionId}</strong></p>
+            <a href="/all" style="background: #4b5563; color: white; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+              View Transaction History
+            </a>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modal);
+      
+      setTimeout(() => {
+        window.location.href = '/all';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

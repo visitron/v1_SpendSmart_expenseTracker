@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reports | SpendSmart - Category Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .page-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1.05rem;
+    }
+
+    .container-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .filter-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .filter-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .filter-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group-custom {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group-custom label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group-custom input,
+    .form-group-custom select {
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      padding: 0.7rem 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group-custom input:focus,
+    .form-group-custom select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.2rem rgba(75, 85, 99, 0.15);
+      outline: none;
+    }
+
+    .btn-filter {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s;
+      align-self: flex-end;
+    }
+
+    .btn-filter:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
+      color: white;
+    }
+
+    .btn-reset {
+      background: var(--light);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      align-self: flex-end;
+    }
+
+    .btn-reset:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .summary-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .summary-card-header {
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-card-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .charts-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .chart-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 350px;
+      margin-bottom: 1rem;
+    }
+
+    .category-breakdown {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .breakdown-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--light);
+      transition: background 0.2s;
+    }
+
+    .category-item:hover {
+      background: var(--light);
+    }
+
+    .category-item:last-child {
+      border-bottom: none;
+    }
+
+    .category-name {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .category-amounts {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .amount-income {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .amount-expense {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--primary);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--light);
+      margin-bottom: 1rem;
+    }
+
+    .btn-back {
+      background: var(--light);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 0.7rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 1rem;
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .filter-group {
+        grid-template-columns: 1fr;
+      }
+
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
+        height: 300px;
+      }
+
+      .category-amounts {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container-main">
+      <h1><i class="fas fa-chart-bar me-2"></i>Reports & Analysis</h1>
+      <p>View your spending and income breakdown by category</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-main">
+    <a href="/" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Dashboard
+    </a>
+
+    <!-- Filter Card -->
+    <div class="filter-card">
+      <div class="filter-title">
+        <i class="fas fa-filter"></i> Filter by Date Range
+      </div>
+      <form method="GET" action="/reports">
+        <div class="filter-group">
+          <div class="form-group-custom">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" name="startDate" value="<%= filters.startDate || '' %>">
+          </div>
+          <div class="form-group-custom">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" name="endDate" value="<%= filters.endDate || '' %>">
+          </div>
+          <div class="form-group-custom">
+            <label for="type">Type</label>
+            <select id="type" name="type">
+              <option value="">All</option>
+              <option value="income" <%= filters.type === 'income' ? 'selected' : '' %>>Income</option>
+              <option value="expense" <%= filters.type === 'expense' ? 'selected' : '' %>>Expense</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+          <button type="submit" class="btn-filter">
+            <i class="fas fa-search me-1"></i> Apply Filters
+          </button>
+          <a href="/reports" class="btn-reset">
+            <i class="fas fa-redo me-1"></i> Reset
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <% if (transactions.length > 0) { %>
+      <!-- Summary Cards -->
+      <div class="summary-section">
+        <div class="summary-card">
+          <div class="summary-card-header">Total Income</div>
+          <div class="summary-card-amount" style="color: var(--success);">
+            ₹ <%= summary.income.toFixed(2) %>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header">Total Expense</div>
+          <div class="summary-card-amount" style="color: var(--danger);">
+            ₹ <%= summary.expense.toFixed(2) %>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header">Net Balance</div>
+          <div class="summary-card-amount" style="color: var(--accent);">
+            ₹ <%= summary.balance.toFixed(2) %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <!-- Expense by Category -->
+        <div class="chart-card">
+          <div class="chart-title">
+            <i class="fas fa-pie-chart me-2" style="color: var(--danger);"></i>Expense by Category
+          </div>
+          <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Income by Category -->
+        <div class="chart-card">
+          <div class="chart-title">
+            <i class="fas fa-pie-chart me-2" style="color: var(--success);"></i>Income by Category
+          </div>
+          <div class="chart-container">
+            <canvas id="incomeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Breakdown Table -->
+      <div class="category-breakdown">
+        <div class="breakdown-title">
+          <i class="fas fa-list me-2"></i>Category-wise Breakdown
+        </div>
+        <% Object.keys(categoryData).sort().forEach(cat => { %>
+          <div class="category-item">
+            <div class="category-name">
+              <i class="fas fa-tag me-2" style="color: var(--accent);"></i><%= cat %>
+            </div>
+            <div class="category-amounts">
+              <div>
+                <span style="color: var(--primary); margin-right: 0.5rem;">Income:</span>
+                <span class="amount-income">₹ <%= categoryData[cat].income.toFixed(2) %></span>
+              </div>
+              <div>
+                <span style="color: var(--primary); margin-right: 0.5rem;">Expense:</span>
+                <span class="amount-expense">₹ <%= categoryData[cat].expense.toFixed(2) %></span>
+              </div>
+              <div>
+                <span style="color: var(--primary); margin-right: 0.5rem;">Net:</span>
+                <span style="font-weight: 600; color: var(--dark);">₹ <%= (categoryData[cat].income - categoryData[cat].expense).toFixed(2) %></span>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+    <% } else { %>
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>No transactions found for the selected period</p>
+        <a href="/add" class="btn btn-primary" style="margin-top: 1.5rem;">
+          <i class="fas fa-plus me-2"></i> Add Transaction
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <% if (transactions.length > 0) { %>
+  <script>
+    // Prepare chart data
+    const categoryData = <%- JSON.stringify(categoryData) %>;
+    
+    // Extract category names and values for expense
+    const expenseCategories = [];
+    const expenseValues = [];
+    const expenseColors = [
+      '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e',
+      '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'
+    ];
+
+    Object.keys(categoryData).sort().forEach((cat, idx) => {
+      if (categoryData[cat].expense > 0) {
+        expenseCategories.push(cat);
+        expenseValues.push(categoryData[cat].expense);
+      }
+    });
+
+    // Extract category names and values for income
+    const incomeCategories = [];
+    const incomeValues = [];
+    const incomeColors = [
+      '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5',
+      '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7'
+    ];
+
+    Object.keys(categoryData).sort().forEach((cat, idx) => {
+      if (categoryData[cat].income > 0) {
+        incomeCategories.push(cat);
+        incomeValues.push(categoryData[cat].income);
+      }
+    });
+
+    // Expense Chart
+    <% if (summary.expense > 0) { %>
+    const expenseCtx = document.getElementById('expenseChart');
+    if (expenseCtx) {
+      new Chart(expenseCtx, {
+        type: 'doughnut',
+        data: {
+          labels: expenseCategories,
+          datasets: [{
+            data: expenseValues,
+            backgroundColor: expenseColors.slice(0, expenseCategories.length),
+            borderColor: 'white',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: { family: "'Poppins', sans-serif", weight: '600', size: 12 },
+                padding: 15,
+                color: '#1f2937'
+              }
+            }
+          }
+        }
+      });
+    }
+    <% } %>
+
+    // Income Chart
+    <% if (summary.income > 0) { %>
+    const incomeCtx = document.getElementById('incomeChart');
+    if (incomeCtx) {
+      new Chart(incomeCtx, {
+        type: 'doughnut',
+        data: {
+          labels: incomeCategories,
+          datasets: [{
+            data: incomeValues,
+            backgroundColor: incomeColors.slice(0, incomeCategories.length),
+            borderColor: 'white',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: { family: "'Poppins', sans-serif", weight: '600', size: 12 },
+                padding: 15,
+                color: '#1f2937'
+              }
+            }
+          }
+        }
+      });
+    }
+    <% } %>
+  </script>
+  <% } %>
+
+</body>
+</html>

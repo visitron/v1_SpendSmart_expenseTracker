@@ -2,252 +2,730 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SpendSmart - Dashboard</title>
+  <title>Dashboard | SpendSmart - AI-Powered Expense Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Bootstrap & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Optional local stylesheet retained for overrides -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 
   <style>
-    :root{
-      --accent:#2563eb;
-      --muted:#6b7280;
-      --card-radius:12px;
-      --glass: rgba(255,255,255,0.7);
-    }
-    body{ font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background:#f7f9fb; color:#111; }
-    .sidebar { width:220px; min-height:100vh; position:fixed; left:0; top:0; padding:20px; background:white; border-right:1px solid #eef2f6; }
-    .main { margin-left:220px; padding:24px; }
-    .brand { font-weight:700; color:var(--accent); letter-spacing:0.2px; }
-    .summary-card { border-radius:var(--card-radius); box-shadow: 0 6px 18px rgba(36,59,85,0.04); }
-    .muted { color:var(--muted); }
-    .table .badge-category { font-size:0.75rem; padding:.35em .5em; border-radius:8px; }
-    @media (max-width: 991px){ .sidebar{ position:relative; width:100%; border-right:none; border-bottom:1px solid #eef2f6 } .main{ margin-left:0; } }
+    * { font-family: 'Poppins', sans-serif; }
 
-    /* Chatbot styles (from index2) */
-    #chatbot-toggle {
-      position: fixed; bottom: 20px; right: 20px;
-      width: 56px; height: 56px;
-      border-radius: 50%; background: var(--accent);
-      color: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      z-index: 1000; font-size: 22px;
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f97316;
     }
-    #chatbot {
-      position: fixed; bottom: 90px; right: 20px;
-      width: 320px; max-height: 420px;
-      background: white; border-radius: var(--card-radius);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-      display: none; flex-direction: column;
-      overflow: hidden; z-index: 1000;
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
     }
-    #chatbot-header {
-      background: var(--accent); color: white;
-      padding: 10px 14px; font-weight: 600;
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 2rem 1.5rem;
+      background: white;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
-    #chatbot-messages {
-      flex: 1; overflow-y: auto; padding: 10px;
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--light);
+    }
+
+    .sidebar-brand-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .sidebar-brand-text h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .sidebar-brand-text p {
+      margin: 0.2rem 0 0 0;
+      font-size: 0.75rem;
+      color: var(--primary);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-nav a {
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-nav a:hover {
+      background: var(--light);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .sidebar-nav a.active {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--light);
+      text-align: center;
+    }
+
+    .sidebar-footer p {
+      font-size: 0.8rem;
+      color: var(--primary);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Main content */
+    .main {
+      margin-left: 260px;
+      padding: 2rem;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .topbar-header .user-info {
+      text-align: right;
+    }
+
+    .topbar-header .user-info p {
+      margin: 0;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    .topbar-controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .form-select, .form-control {
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      padding: 0.7rem 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .form-select:focus, .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.2rem rgba(75, 85, 99, 0.15);
+    }
+
+    .btn {
+      border-radius: 10px;
+      padding: 0.7rem 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
+      color: white;
+    }
+
+    .btn-outline-danger {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .btn-outline-danger:hover {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: white;
+    }
+
+    .btn-outline-success {
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    .btn-outline-success:hover {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    /* Summary cards */
+    .summary-card {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    .summary-card-header {
+      color: var(--primary);
       font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .chat-msg { margin-bottom: 8px; }
-    .chat-user { text-align: right; color: var(--accent); }
-    .chat-bot { text-align: left; color: #333; }
+
+    .summary-card-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    .summary-card-icon {
+      font-size: 2.5rem;
+      opacity: 0.8;
+    }
+
+    /* Chart card */
+    .chart-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .chart-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-title .subtitle {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Transactions table */
+    .transactions-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .transactions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--light);
+    }
+
+    .transactions-header h5 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .transactions-header .count {
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .table {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .table thead th {
+      background: var(--light);
+      color: var(--dark);
+      font-weight: 700;
+      border: none;
+      padding: 1rem;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .table tbody td {
+      padding: 1.2rem;
+      vertical-align: middle;
+      border-color: var(--light);
+    }
+
+    .table tbody tr:hover {
+      background: var(--light);
+      transition: background 0.2s;
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .badge-income {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-expense {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .badge-category {
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    .transaction-amount {
+      font-weight: 700;
+      color: var(--dark);
+      font-size: 1rem;
+    }
+
+    .transaction-note {
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Chatbot styles */
+    #chatbot-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 8px 25px rgba(75, 85, 99, 0.4);
+      z-index: 1000;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #chatbot-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 35px rgba(75, 85, 99, 0.5);
+    }
+
+    #chatbot {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 340px;
+      max-height: 450px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+
+    #chatbot-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 1.2rem;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    #chatbot-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .chat-msg {
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
+    }
+
+    .chat-user {
+      text-align: right;
+      background: var(--light);
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .chat-bot {
+      text-align: left;
+      background: #e5e7eb;
+      color: var(--dark);
+    }
+
     #chatbot-input {
-      display: flex; border-top: 1px solid #ddd;
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: white;
     }
+
     #chatbot-input input {
-      flex: 1; border: none; padding: 10px;
-      font-size: 0.9rem; outline: none;
+      flex: 1;
+      border: none;
+      padding: 1rem;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
     }
+
     #chatbot-input button {
-      border: none; background: var(--accent);
-      color: white; padding: 0 16px;
+      border: none;
+      background: none;
+      color: var(--accent);
+      padding: 0 1rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+
+    #chatbot-input button:hover {
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+        padding: 1.5rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 1.5rem;
+      }
+
+      .topbar {
+        gap: 1rem;
+      }
+
+      .topbar-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar-controls {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 1rem;
+      }
+
+      .topbar-controls {
+        flex-direction: column;
+      }
+
+      .topbar-controls > * {
+        width: 100%;
+      }
+
+      .table {
+        font-size: 0.85rem;
+      }
+
+      .table thead th,
+      .table tbody td {
+        padding: 0.75rem 0.5rem;
+      }
+
+      #chatbot {
+        width: calc(100vw - 2rem);
+        right: 1rem;
+      }
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <!-- Sidebar -->
   <aside class="sidebar d-none d-lg-block">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <div class="rounded-circle bg-light p-2"><i class="fa-solid fa-piggy-bank fa-lg text-primary"></i></div>
-      <div>
-        <div class="brand">SpendSmart</div>
-        <div class="muted small">Personal finance</div>
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">
+        <i class="fas fa-piggy-bank"></i>
+      </div>
+      <div class="sidebar-brand-text">
+        <h3>SpendSmart</h3>
+        <p>Finance Tracker</p>
       </div>
     </div>
 
-    <nav class="nav flex-column">
-      <a class="nav-link py-2 active" href="#"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a>
-      <a class="nav-link py-2" href="/transactions"><i class="fa-solid fa-list-check me-2"></i> Transactions</a>
-      <a class="nav-link py-2" href="/budgets"><i class="fa-solid fa-wallet me-2"></i> Budgets</a>
-      <a class="nav-link py-2" href="/reports"><i class="fa-solid fa-file-invoice-dollar me-2"></i> Reports</a>
-      <a class="nav-link py-2" href="/settings"><i class="fa-solid fa-gear me-2"></i> Settings</a>
+    <nav class="sidebar-nav">
+      <a href="#" class="active"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+      <a href="/transactions"><i class="fas fa-list-check me-2"></i> Transactions</a>
+      <a href="/budgets"><i class="fas fa-wallet me-2"></i> Budgets</a>
+      <a href="/reports"><i class="fas fa-file-invoice-dollar me-2"></i> Reports</a>
+      <a href="/settings"><i class="fas fa-gear me-2"></i> Settings</a>
     </nav>
 
-    <div class="mt-4 small muted">
-      Tip: click <strong>+ Add Transaction</strong> to quickly log spending.
+    <div class="sidebar-footer">
+      <p>💡 Use <strong>+ Add</strong> to quickly log spending and income.</p>
     </div>
   </aside>
 
-  <!-- Main -->
+  <!-- Main Content -->
   <main class="main">
     <!-- Topbar -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
-      <div>
-        <h1 class="h4 mb-0">Dashboard</h1>
-        <div class="muted small">Welcome back, <strong><%= user.full_name %></strong></div>
+    <div class="topbar">
+      <div class="topbar-header">
+        <div>
+          <h1>Dashboard</h1>
+        </div>
+        <div class="user-info">
+          <p>Welcome back, <strong><%= user.full_name %></strong></p>
+        </div>
       </div>
 
-      <div class="d-flex gap-2 align-items-center w-100 w-md-auto">
-        <!-- Month selector (server can set `currentMonth` if desired) -->
-        <select id="monthSelect" class="form-select form-select-sm me-2" style="width:180px;">
+      <div class="topbar-controls">
+        <select id="monthSelect" class="form-select" style="width: 200px;">
           <option selected>Last 30 days</option>
           <option>This month</option>
           <option>Last month</option>
           <option>Custom range</option>
         </select>
 
-        <div class="input-group input-group-sm me-2" style="width:260px;">
-          <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input id="tableSearch" type="text" class="form-control" placeholder="Search transactions, category, description...">
+        <div class="input-group" style="max-width: 300px;">
+          <span class="input-group-text bg-white border-end-0"><i class="fas fa-search"></i></span>
+          <input id="tableSearch" type="text" class="form-control border-start-0" placeholder="Search transactions...">
         </div>
 
-        <a href="/add" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-1"></i> Add</a>
-        <a href="/logout" class="btn btn-sm btn-outline-danger ms-1 d-none d-md-inline">Logout</a>
+        <a href="/add" class="btn btn-primary"><i class="fas fa-plus me-2"></i> Add Transaction</a>
+        <a href="/logout" class="btn btn-outline-danger d-none d-md-inline"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
       </div>
     </div>
 
-    <!-- Summary cards -->
-    <div class="row g-3 mb-4">
-      <div class="col-sm-6 col-md-4">
-        <div class="card summary-card p-3">
-          <div class="d-flex justify-content-between align-items-center">
+    <!-- Guest Warning Banner -->
+    <% if (user.isGuest) { %>
+      <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.15) 100%); border-left: 5px solid #f97316; padding: 1.5rem; margin: 1.5rem; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; animation: slideDown 0.4s ease-out;">
+        <div>
+          <h5 style="color: #ea580c; margin-bottom: 0.5rem; font-weight: 700;">
+            <i class="fas fa-user-secret me-2"></i>You're in Guest Mode
+          </h5>
+          <p style="color: #b45309; margin: 0; font-size: 0.95rem;">
+            <strong>⚠️ All data is temporary</strong> and will be cleared when you log out. 
+            <a href="/register" style="color: #f97316; text-decoration: underline; font-weight: 600;">Create a free account</a> to save your data permanently.
+          </p>
+        </div>
+        <a href="/guest-logout" class="btn btn-outline-warning" style="border-color: #f97316; color: #f97316; white-space: nowrap; margin-left: 2rem;">
+          <i class="fas fa-sign-out-alt me-1"></i>Exit Guest Mode
+        </a>
+      </div>
+    <% } %>    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="summary-card">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
-              <small class="muted">Total Income</small>
-              <div class="h5 mt-1" id="incomeAmt">₹ <%= (summary.income || 0).toFixed(2) %></div>
+              <div class="summary-card-header">Total Income</div>
+              <div class="summary-card-amount" id="incomeAmt">₹ <%= (summary.income || 0).toFixed(2) %></div>
             </div>
-            <div class="text-success">
-              <i class="fa-solid fa-arrow-down-left fa-2x"></i>
+            <div class="summary-card-icon text-success">
+              <i class="fas fa-arrow-down"></i>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-sm-6 col-md-4">
-        <div class="card summary-card p-3">
-          <div class="d-flex justify-content-between align-items-center">
+      <div class="col-md-4">
+        <div class="summary-card">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
-              <small class="muted">Total Expense</small>
-              <div class="h5 mt-1" id="expenseAmt">₹ <%= (summary.expense || 0).toFixed(2) %></div>
+              <div class="summary-card-header">Total Expense</div>
+              <div class="summary-card-amount" id="expenseAmt">₹ <%= (summary.expense || 0).toFixed(2) %></div>
             </div>
-            <div class="text-danger">
-              <i class="fa-solid fa-arrow-up-right fa-2x"></i>
+            <div class="summary-card-icon text-danger">
+              <i class="fas fa-arrow-up"></i>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-4">
-        <div class="card summary-card p-3">
-          <div class="d-flex justify-content-between align-items-center">
+      <div class="col-md-4">
+        <div class="summary-card">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
-              <small class="muted">Balance</small>
-              <div class="h5 mt-1" id="balanceAmt">₹ <%= (summary.balance || 0).toFixed(2) %></div>
+              <div class="summary-card-header">Balance</div>
+              <div class="summary-card-amount" id="balanceAmt">₹ <%= (summary.balance || 0).toFixed(2) %></div>
             </div>
-            <div class="text-primary">
-              <i class="fa-solid fa-wallet fa-2x"></i>
+            <div class="summary-card-icon" style="color: var(--accent);">
+              <i class="fas fa-wallet"></i>
             </div>
           </div>
-          <div class="small muted mt-2">Based on selected period</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chart & Quick actions -->
-    <div class="row g-3 mb-4">
-      <div class="col-lg-6">
-        <div class="card p-3 summary-card h-100">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="mb-0">Income vs Expense</h6>
-            <div class="muted small">Breakdown</div>
-          </div>
-          <div class="d-flex justify-content-center align-items-center" style="min-height:240px;">
-            <canvas id="summaryChart" style="max-width:100%;"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-6">
-        <div class="card p-3 summary-card h-100">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="mb-0">Quick Actions</h6>
-            <div class="muted small">Shortcuts</div>
-          </div>
-
-          <div class="d-flex flex-column gap-2">
-            <a href="/add?type=expense" class="btn btn-outline-danger"> <i class="fa-solid fa-cart-shopping me-2"></i> Add Expense</a>
-            <a href="/add?type=income" class="btn btn-outline-success"> <i class="fa-solid fa-hand-holding-dollar me-2"></i> Add Income</a>
-            <button id="exportCsvBtn" class="btn btn-outline-secondary"> <i class="fa-solid fa-file-export me-2"></i> Export CSV</button>
-            <a href="/reports" class="btn btn-outline-primary"> <i class="fa-solid fa-chart-pie me-2"></i> View Reports</a>
-          </div>
+          <div class="summary-card-header mt-2" style="margin-top: 1rem; margin-bottom: 0;">Period based</div>
         </div>
       </div>
     </div>
 
-    <!-- Transactions -->
-    <div class="card p-3 summary-card">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Recent Transactions</h5>
-        <div class="muted small">Showing <strong id="txCount"><%= transactions.length %></strong> items</div>
+    <!-- Transactions Table -->
+    <div class="transactions-card">
+      <div class="transactions-header">
+        <h5><i class="fas fa-history me-2"></i> Recent Transactions</h5>
+        <span class="count">Showing <strong id="txCount"><%= transactions.length %></strong> items</span>
       </div>
 
       <div class="table-responsive">
-        <table id="txTable" class="table table-striped align-middle">
-          <thead class="table-light">
+        <table id="txTable" class="table table-hover">
+          <thead>
             <tr>
-              <th style="min-width:120px">Amount</th>
-              <th style="min-width:110px">Type</th>
+              <th style="min-width: 120px;">Amount</th>
+              <th style="min-width: 100px;">Type</th>
               <th>Description</th>
-              <th style="min-width:140px">Category</th>
-              <th style="min-width:160px">Date</th>
-              <th style="min-width:120px">Actions</th>
+              <th style="min-width: 140px;">Category</th>
+              <th style="min-width: 160px;">Date</th>
+              <th style="min-width: 150px;">Actions</th>
             </tr>
           </thead>
           <tbody id="txBody">
             <% transactions.forEach(tx => { %>
               <tr data-desc="<%= (tx.description || '').toLowerCase() %>" data-cat="<%= (tx.category_name || '').toLowerCase() %>">
-                <td data-amount="<%= tx.amount %>">
-                  <div class="d-flex flex-column">
-                    <div class="fw-semibold">₹ <span class="raw-amt"><%= tx.amount %></span></div>
-                    <small class="muted"><%= tx.note || '' %></small>
-                  </div>
+                <td>
+                  <div class="transaction-amount">₹ <span class="raw-amt"><%= tx.amount %></span></div>
+                  <% if(tx.note) { %><div class="transaction-note"><%= tx.note %></div><% } %>
                 </td>
                 <td>
                   <% if(tx.transaction_type && tx.transaction_type.toLowerCase() === 'income') { %>
-                    <span class="badge bg-success">Income</span>
+                    <span class="badge badge-income"><i class="fas fa-arrow-down me-1"></i> Income</span>
                   <% } else { %>
-                    <span class="badge bg-danger">Expense</span>
+                    <span class="badge badge-expense"><i class="fas fa-arrow-up me-1"></i> Expense</span>
                   <% } %>
                 </td>
                 <td><%= tx.description %></td>
                 <td>
                   <% if(tx.category_name) { %>
-                    <span class="badge bg-light text-dark badge-category"><i class="fa-solid fa-tag me-1"></i> <%= tx.category_name %></span>
+                    <span class="badge badge-category"><i class="fas fa-tag me-1"></i> <%= tx.category_name %></span>
                   <% } else { %>
-                    <span class="muted small">N/A</span>
+                    <span style="color: var(--primary);">N/A</span>
                   <% } %>
                 </td>
                 <td><%= new Date(tx.transaction_time).toLocaleString() %></td>
                 <td>
-                  <div class="btn-group" role="group">
+                  <div class="action-buttons">
                     <a href="/edit/<%= tx.id %>" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <form action="/delete/<%= tx.id %>" method="POST" class="d-inline ms-1 delete-form">
+                    <form action="/delete/<%= tx.id %>" method="POST" class="d-inline delete-form">
                       <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                     </form>
                   </div>
@@ -259,38 +737,40 @@
       </div>
     </div>
 
-    <footer class="mt-4 small muted text-center">Made with ♥ • SpendSmart</footer>
+    <div class="dashboard-footer">
+      Made with ❤️ by <strong>SpendSmart</strong> • AI-Powered Expense Tracker
+    </div>
   </main>
 
-  <!-- Chatbot Widget (from index2) -->
-  <button id="chatbot-toggle"><i class="fa-solid fa-comments"></i></button>
-  <div id="chatbot" role="dialog" aria-label="SpendSmart chat">
-    <div id="chatbot-header">💬 SpendSmart AI</div>
+  <!-- Chatbot Widget -->
+  <button id="chatbot-toggle" title="Open chat"><i class="fas fa-comments"></i></button>
+  <div id="chatbot" role="dialog" aria-label="SpendSmart AI Chat">
+    <div id="chatbot-header">
+      <i class="fas fa-robot me-2"></i> SpendSmart AI
+    </div>
     <div id="chatbot-messages" aria-live="polite" aria-atomic="false"></div>
     <div id="chatbot-input">
       <input type="text" id="chatbot-text" placeholder="Ask about your finances..." aria-label="Chat input" />
-      <button id="chatbot-send" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+      <button id="chatbot-send" title="Send"><i class="fas fa-paper-plane"></i></button>
     </div>
   </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Client-side helpers (keeps server EJS intact) -->
   <script>
-    // format currency displayed in table (server gives raw numbers)
-    (function formatAmounts(){
-      const formatter = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:2 });
+  <script>
+    // Format currency
+    (function formatAmounts() {
+      const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
       document.querySelectorAll('.raw-amt').forEach(el => {
         const n = Number(el.textContent || '0');
-        if(!isNaN(n)) el.textContent = formatter.format(n).replace('₹', '').trim();
+        if (!isNaN(n)) el.textContent = formatter.format(n).replace('₹', '').trim();
       });
-      // update totals in case server changed them (they're already formatted)
-      // (left intentionally minimal - server values are primary)
     })();
 
-    // search/filter table client-side
-    document.getElementById('tableSearch').addEventListener('input', function(){
+    // Search/Filter
+    document.getElementById('tableSearch').addEventListener('input', function() {
       const q = this.value.trim().toLowerCase();
       const rows = document.querySelectorAll('#txBody tr');
       let visible = 0;
@@ -299,67 +779,42 @@
         const cat = r.getAttribute('data-cat') || '';
         const matches = !q || desc.includes(q) || cat.includes(q);
         r.style.display = matches ? '' : 'none';
-        if(matches) visible++;
+        if (matches) visible++;
       });
       document.getElementById('txCount').textContent = visible;
     });
 
-    // intercept delete forms and confirm
+    // Delete confirmation
     document.querySelectorAll('.delete-form').forEach(f => {
-      f.addEventListener('submit', function(ev){
-        if(!confirm('Delete this transaction? This action cannot be undone.')) ev.preventDefault();
+      f.addEventListener('submit', function(ev) {
+        if (!confirm('Delete this transaction? This action cannot be undone.')) ev.preventDefault();
       });
     });
 
-    // CSV export (client side - simple)
-    document.getElementById('exportCsvBtn').addEventListener('click', function(){
-      const rows = [['Amount','Type','Description','Category','Date']];
+    // CSV export
+    document.getElementById('exportCsvBtn').addEventListener('click', function() {
+      const rows = [['Amount', 'Type', 'Description', 'Category', 'Date']];
       document.querySelectorAll('#txBody tr').forEach(tr => {
-        if(tr.style.display === 'none') return; // skip filtered
+        if (tr.style.display === 'none') return;
         const cols = tr.querySelectorAll('td');
-        const amount = cols[0].innerText.replace(/\n/g,' ').trim();
+        const amount = cols[0].innerText.replace(/\n/g, ' ').trim();
         const type = cols[1].innerText.trim();
         const desc = cols[2].innerText.trim();
         const cat = cols[3].innerText.trim();
         const date = cols[4].innerText.trim();
-        rows.push([amount, type, `"${desc.replace(/"/g,'""')}"`, `"${cat.replace(/"/g,'""')}"`, `"${date}"`]);
+        rows.push([amount, type, `"${desc.replace(/"/g, '""')}"`, `"${cat.replace(/"/g, '""')}"`, `"${date}"`]);
       });
       const csv = rows.map(r => r.join(',')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'transactions.csv';
+      a.click();
       URL.revokeObjectURL(url);
     });
 
-    // Chart.js donut (uses server-side summary values)
-    (function renderChart(){
-      const income = Number(<%= summary.income || 0 %>);
-      const expense = Number(<%= summary.expense || 0 %>);
-      const ctxEl = document.getElementById('summaryChart');
-      if(!ctxEl) return;
-      const ctx = ctxEl.getContext('2d');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Income', 'Expense'],
-          datasets: [{
-            data: [income, expense],
-            backgroundColor: ['#28a745', '#dc3545'],
-            borderColor: ['rgba(0,0,0,0.04)', 'rgba(0,0,0,0.04)'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } },
-          layout: { padding: 8 }
-        }
-      });
-    })();
-  </script>
-
-  <!-- Chatbot logic (from index2) -->
-  <script>
+    // Chatbot
     const toggleBtn = document.getElementById('chatbot-toggle');
     const chatbot = document.getElementById('chatbot');
     const messages = document.getElementById('chatbot-messages');
@@ -368,11 +823,10 @@
 
     toggleBtn.addEventListener('click', () => {
       chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
-      // focus input when opened
-      if(chatbot.style.display === 'flex') setTimeout(() => input.focus(), 120);
+      if (chatbot.style.display === 'flex') setTimeout(() => input.focus(), 120);
     });
 
-    function appendMessage(text, sender='bot') {
+    function appendMessage(text, sender = 'bot') {
       const div = document.createElement('div');
       div.className = 'chat-msg ' + (sender === 'user' ? 'chat-user' : 'chat-bot');
       div.textContent = text;
@@ -382,28 +836,26 @@
 
     async function sendMessage() {
       const q = input.value.trim();
-      if(!q) return;
+      if (!q) return;
       appendMessage(q, 'user');
       input.value = '';
-
-      appendMessage('...', 'bot'); // placeholder
-
+      appendMessage('...', 'bot');
       try {
         const res = await fetch('/api/chat', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ message: q })   // send { message }
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: q })
         });
         const data = await res.json();
         messages.lastChild.textContent = data.reply || '[No response]';
-      } catch(e) {
+      } catch (e) {
         messages.lastChild.textContent = '⚠️ Error contacting chatbot.';
       }
     }
 
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keydown', e => {
-      if(e.key === 'Enter') sendMessage();
+      if (e.key === 'Enter') sendMessage();
     });
   </script>
 </body>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSmart - AI-Powered Expense Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+    
+    :root {
+      --primary: #6b7280;
+      --accent: #9ca3af;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --lighter-grey: #e5e7eb;
+    }
+
+    body { 
+      background: #f9fafb; 
+      color: var(--dark); 
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--dark) !important;
+      margin: 0 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary) !important;
+    }
+
+    .btn-login-nav {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-login-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+      color: white;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .btn-primary-hero {
+      background: #6b7280;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      color: white;
+    }
+
+    .btn-primary-hero:hover {
+      background: #4b5563;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(107, 114, 128, 0.3);
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 80px 0;
+      background: #f9fafb;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--dark);
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 15px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      border-color: var(--primary);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .feature-card h5 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+
+    .feature-card p {
+      color: #64748b;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* AI Benefits */
+    .ai-benefits {
+      padding: 80px 0;
+      background: white;
+    }
+
+    .benefit-item {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      align-items: flex-start;
+    }
+
+    .benefit-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .benefit-content h4 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .benefit-content p {
+      color: #64748b;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Login Modal */
+    .modal-content {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .modal-header .btn-close {
+      filter: brightness(0) invert(1);
+    }
+
+    .login-form {
+      padding: 2rem;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      padding: 12px 16px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+    }
+
+    .login-form .btn-primary {
+      background: #6b7280;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+
+    .login-form .btn-primary:hover {
+      background: #4b5563;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .register-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 3rem 0 1.5rem;
+    }
+
+    footer h6 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    footer a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 2rem;
+      text-align: center;
+      color: #64748b;
+    }
+
+    /* Error message */
+    .error-message {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .benefit-item {
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-wallet me-2"></i>SpendSmart
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#ai-benefits">AI Insights</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-login-nav ms-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 hero-content">
+          <h1>AI-Powered Expense Tracking</h1>
+          <p>Take control of your finances with intelligent insights and personalized recommendations powered by AI.</p>
+          <button class="btn btn-primary-hero" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fas fa-rocket me-2"></i>Get Started Free
+          </button>
+        </div>
+        <div class="col-lg-6">
+          <div style="text-align: center;">
+            <i class="fas fa-chart-pie" style="font-size: 15rem; color: rgba(255,255,255,0.2);"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <h2 class="section-title">Powerful Features</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h5>Track Expenses</h5>
+            <p>Monitor all your spending with detailed categorization and real-time analytics.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <h5>AI Assistant</h5>
+            <p>Get personalized financial insights and recommendations from our intelligent chatbot.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <h5>Budget Management</h5>
+            <p>Set smart budgets and receive alerts when you're approaching limits.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h5>Always Accessible</h5>
+            <p>Manage your finances anytime, anywhere with our responsive design.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Benefits Section -->
+  <section class="ai-benefits" id="ai-benefits">
+    <div class="container">
+      <h2 class="section-title">Powered by Intelligence</h2>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div class="benefit-content">
+              <h4>Smart Recommendations</h4>
+              <p>Our AI analyzes your spending patterns and provides personalized financial recommendations to help you save more and spend wisely.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="benefit-content">
+              <h4>AI Chat Support</h4>
+              <p>Interact with our intelligent chatbot to ask questions about your finances, get instant insights, and receive transaction assistance.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-trending-up"></i>
+            </div>
+            <div class="benefit-content">
+              <h4>Predictive Analytics</h4>
+              <p>Get ahead of your finances with AI-powered predictions about future spending and savings opportunities.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="benefit-content">
+              <h4>Secure & Private</h4>
+              <p>Your financial data is encrypted and protected with enterprise-grade security to keep your information safe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Master Your Finances?</h2>
+      <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">Join thousands of users who are taking control of their spending with AI-powered insights.</p>
+      <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">
+        <i class="fas fa-check me-2"></i>Start Free Today
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <h6><i class="fas fa-wallet me-2"></i>SpendSmart</h6>
+          <p style="color: #94a3b8; font-size: 0.95rem;">AI-powered expense tracking for modern finances.</p>
+        </div>
+        <div class="col-md-3">
+          <h6>Product</h6>
+          <ul class="list-unstyled">
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h6>Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h6>Legal</h6>
+          <ul class="list-unstyled">
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SpendSmart. All rights reserved. | Powered by AI for smarter finances.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">
+            <i class="fas fa-sign-in-alt me-2"></i>Welcome Back
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body login-form">
+          <% if (error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <%= error %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          <% } %>
+          
+          <form action="/login" method="POST">
+            <div class="mb-3">
+              <label for="email" class="form-label fw-600">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label fw-600">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+          </form>
+
+          <div style="position: relative; margin: 1.5rem 0;">
+            <hr style="opacity: 0.3;">
+            <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 0.5rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">OR</span>
+          </div>
+
+          <form action="/guest-login" method="POST">
+            <button type="submit" class="btn w-100 fw-bold" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none;">
+              <i class="fas fa-user-secret me-2"></i>Continue as Guest
+            </button>
+          </form>
+
+          <div class="register-link">
+            Don't have an account? <a href="/register">Create one now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

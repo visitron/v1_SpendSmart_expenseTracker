@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budgets | SpendSmart - Budget Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f97316;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .page-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1.05rem;
+    }
+
+    .container-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .btn-back {
+      background: var(--light);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 0.7rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Alerts Section */
+    .alerts-section {
+      margin-bottom: 2rem;
+    }
+
+    .alert-card {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border-left: 5px solid var(--danger);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    .alert-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .alert-message {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    .alert-badge {
+      background: var(--danger);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+
+    /* Card Sections */
+    .section-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    /* Overall Budget */
+    .overall-budget-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .budget-stat {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .budget-stat-label {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .budget-stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    /* Progress Bar */
+    .budget-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--light);
+    }
+
+    .budget-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .budget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .budget-name {
+      font-weight: 700;
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+
+    .budget-amounts {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .budget-amount {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .amount-label {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .amount-value {
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .progress-container {
+      margin-bottom: 1rem;
+    }
+
+    .progress-bar-custom {
+      height: 8px;
+      background: var(--light);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      transition: background 0.3s, width 0.3s;
+    }
+
+    .progress-fill.warning {
+      background: var(--warning);
+    }
+
+    .progress-fill.danger {
+      background: var(--danger);
+    }
+
+    .progress-percentage {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    .budget-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm-custom {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 2px solid;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-delete {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: transparent;
+    }
+
+    .btn-delete:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* Form Section */
+    .form-section {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+    }
+
+    .form-section h5 {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group-custom {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-end;
+    }
+
+    .form-group-custom > div {
+      flex: 1;
+    }
+
+    .form-group-custom label {
+      display: block;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group-custom input,
+    .form-group-custom select {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      padding: 0.7rem 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group-custom input:focus,
+    .form-group-custom select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.2rem rgba(75, 85, 99, 0.15);
+      outline: none;
+    }
+
+    .btn-set-budget {
+      background: linear-gradient(135deg, #4b5563 0%, #3d4556 100%);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-set-budget:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--primary);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--light);
+      margin-bottom: 1rem;
+    }
+
+    .month-period {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 1rem;
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .budget-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .budget-amounts {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .form-group-custom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .alert-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .alert-badge {
+        margin-left: 0;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container-main">
+      <h1><i class="fas fa-wallet me-2"></i>Budget Management</h1>
+      <p>Set and track your spending budgets</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-main">
+    <a href="/" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Dashboard
+    </a>
+
+    <div class="month-period">
+      <i class="fas fa-calendar"></i>
+      Current period: <%= monthStart %> to <%= monthEnd %>
+    </div>
+
+    <!-- Alerts Section -->
+    <% if (alerts.length > 0) { %>
+    <div class="alerts-section">
+      <h4 style="margin-bottom: 1rem; color: var(--danger);"><i class="fas fa-exclamation-triangle me-2"></i>Budget Alerts</h4>
+      <% alerts.forEach(alert => { %>
+        <div class="alert-card">
+          <div class="alert-content">
+            <div class="alert-title"><%= alert.category %></div>
+            <div class="alert-message">
+              You've spent ₹<%= alert.spent.toFixed(2) %> out of ₹<%= alert.budget.toFixed(2) %>
+            </div>
+          </div>
+          <div class="alert-badge">
+            <%= alert.percentage %>% over
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <!-- Overall Budget Section -->
+    <div class="section-card">
+      <div class="section-title">
+        <i class="fas fa-bullseye" style="color: var(--accent);"></i>Overall Budget
+      </div>
+
+      <% if (overallBudget) { %>
+        <div class="overall-budget-display">
+          <div class="budget-stat">
+            <div class="budget-stat-label">Budget Limit</div>
+            <div class="budget-stat-value" style="color: var(--accent);">₹<%= overallBudget.amount.toFixed(2) %></div>
+          </div>
+          <div class="budget-stat">
+            <div class="budget-stat-label">Total Spent</div>
+            <div class="budget-stat-value" style="color: var(--danger);">₹<%= totalExpense.toFixed(2) %></div>
+          </div>
+          <div class="budget-stat">
+            <div class="budget-stat-label">Remaining</div>
+            <div class="budget-stat-value" style="color: <%= (overallBudget.amount - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)' %>;">
+              ₹<%= Math.max(0, overallBudget.amount - totalExpense).toFixed(2) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="budget-item">
+          <div class="budget-header">
+            <div class="budget-name">Overall Spending</div>
+            <div class="budget-amounts">
+              <div class="budget-amount">
+                <span class="amount-label">Spent</span>
+                <span class="amount-value">₹<%= totalExpense.toFixed(2) %></span>
+              </div>
+              <div class="budget-amount">
+                <span class="amount-label">Limit</span>
+                <span class="amount-value">₹<%= overallBudget.amount.toFixed(2) %></span>
+              </div>
+            </div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar-custom">
+              <div class="progress-fill <%= totalExpense > overallBudget.amount ? 'danger' : (totalExpense > overallBudget.amount * 0.8 ? 'warning' : '') %>" 
+                   style="width: <%= Math.min(100, (totalExpense / overallBudget.amount) * 100) %>%;"></div>
+            </div>
+            <div class="progress-percentage">
+              <%= Math.round((totalExpense / overallBudget.amount) * 100) %>% used
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+        <p style="color: var(--primary); margin-bottom: 1.5rem;">No overall budget set yet. Create one below.</p>
+      <% } %>
+
+      <div class="form-section">
+        <h5>Set Overall Budget</h5>
+        <form method="POST" action="/budgets/overall">
+          <div class="form-group-custom">
+            <div>
+              <label for="overallAmount">Monthly Budget Amount (₹)</label>
+              <input type="number" step="0.01" id="overallAmount" name="amount" placeholder="10000" required 
+                     value="<%= overallBudget ? overallBudget.amount : '' %>">
+            </div>
+            <button type="submit" class="btn-set-budget">
+              <i class="fas fa-save me-1"></i>Save Budget
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Category Budgets Section -->
+    <div class="section-card">
+      <div class="section-title">
+        <i class="fas fa-tag" style="color: var(--accent);"></i>Category-wise Budgets
+      </div>
+
+      <% if (categoryBudgets.length > 0) { %>
+        <% categoryBudgets.forEach(budget => {
+          const spent = spending[budget.category_id] || 0;
+          const percentage = Math.round((spent / budget.amount) * 100);
+          const isOver = spent > budget.amount;
+        %>
+          <div class="budget-item">
+            <div class="budget-header">
+              <div class="budget-name">
+                <i class="fas fa-tag me-2" style="color: var(--accent);"></i><%= budget.category_name %>
+              </div>
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="budget-amounts">
+                  <div class="budget-amount">
+                    <span class="amount-label">Spent</span>
+                    <span class="amount-value" style="color: <%= isOver ? 'var(--danger)' : 'var(--primary)' %>;">₹<%= spent.toFixed(2) %></span>
+                  </div>
+                  <div class="budget-amount">
+                    <span class="amount-label">Limit</span>
+                    <span class="amount-value">₹<%= budget.amount.toFixed(2) %></span>
+                  </div>
+                </div>
+                <form method="POST" action="/budgets/delete/<%= budget.id %>" style="display: inline;" onsubmit="return confirm('Delete this budget?');">
+                  <button type="submit" class="btn-sm-custom btn-delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar-custom">
+                <div class="progress-fill <%= isOver ? 'danger' : (spent > budget.amount * 0.8 ? 'warning' : '') %>" 
+                     style="width: <%= Math.min(100, (spent / budget.amount) * 100) %>%;"></div>
+              </div>
+              <div class="progress-percentage">
+                <%= percentage %>% used
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+
+      <div class="form-section">
+        <h5>Set Category Budget</h5>
+        <form method="POST" action="/budgets/category">
+          <div class="form-group-custom">
+            <div>
+              <label for="categorySelect">Select Category</label>
+              <select id="categorySelect" name="categoryId" required>
+                <option value="">Choose a category...</option>
+                <% allCategories.forEach(cat => { %>
+                  <option value="<%= cat.id %>"><%= cat.category_name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div>
+              <label for="categoryAmount">Budget Amount (₹)</label>
+              <input type="number" step="0.01" id="categoryAmount" name="amount" placeholder="5000" required>
+            </div>
+            <button type="submit" class="btn-set-budget">
+              <i class="fas fa-save me-1"></i>Add Budget
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <% if (categoryBudgets.length === 0 && !overallBudget) { %>
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>No budgets set yet</p>
+        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Start by creating an overall budget or category-wise budgets above</p>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

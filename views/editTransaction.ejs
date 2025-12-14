@@ -2,43 +2,259 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Transaction</title>
+  <title>Edit Transaction | SpendSmart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+    
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --warning: #f97316;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: var(--dark);
+    }
+
+    .form-container {
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: white;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .form-header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .form-body {
+      padding: 2.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.7rem;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      padding: 12px 16px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--warning);
+      box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.15);
+      outline: none;
+    }
+
+    .form-control::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: white;
+      border: none;
+      padding: 13px 30px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      flex: 1;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+      color: white;
+    }
+
+    .btn-cancel {
+      background: var(--light);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 13px 30px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .form-footer {
+      text-align: center;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--light);
+      background: #f9fafb;
+    }
+
+    .form-footer p {
+      margin: 0;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .form-icon {
+      color: var(--warning);
+      margin-right: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-4">
-    <h2>Edit Transaction</h2>
-    <form action="/edit/<%= transaction.id %>" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Amount</label>
-        <input type="number" step="0.01" name="amount" class="form-control" value="<%= transaction.amount %>" required>
+  <div class="form-container">
+    <div class="form-card">
+      <div class="form-header">
+        <h1><i class="fas fa-pencil-alt me-2"></i>Edit Transaction</h1>
+        <p>Update transaction details</p>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Type</label>
-        <select name="transaction_type" class="form-control">
-          <option value="expense" <%= transaction.transaction_type === 'expense' ? 'selected' : '' %>>Expense</option>
-          <option value="income" <%= transaction.transaction_type === 'income' ? 'selected' : '' %>>Income</option>
-        </select>
+
+      <div class="form-body">
+        <form action="/edit/<%= transaction.id %>" method="POST">
+          <!-- Amount -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-dollar-sign form-icon"></i>Amount
+            </label>
+            <input type="number" step="0.01" name="amount" class="form-control" value="<%= transaction.amount %>" required>
+          </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-exchange-alt form-icon"></i>Type
+            </label>
+            <select name="transaction_type" class="form-select" required>
+              <option value="expense" <%= transaction.transaction_type === 'expense' ? 'selected' : '' %>>Expense</option>
+              <option value="income" <%= transaction.transaction_type === 'income' ? 'selected' : '' %>>Income</option>
+            </select>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-tag form-icon"></i>Category
+            </label>
+            <select name="category_id" class="form-select" required>
+              <% categories.forEach(c => { %>
+                <option value="<%= c.id %>" <%= transaction.category_id === c.id ? 'selected' : '' %>><%= c.category_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-note-sticky form-icon"></i>Description
+            </label>
+            <input type="text" name="description" class="form-control" value="<%= transaction.description %>" placeholder="Transaction details...">
+          </div>
+
+          <!-- Date & Time -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-calendar form-icon"></i>Date & Time
+            </label>
+            <input type="datetime-local" name="transaction_time" class="form-control" value="<%= new Date(transaction.transaction_time).toISOString().slice(0,16) %>" required>
+          </div>
+
+          <!-- Buttons -->
+          <div class="button-group">
+            <button type="submit" class="btn btn-submit">
+              <i class="fas fa-save me-1"></i>Update
+            </button>
+            <a href="/" class="btn-cancel">
+              <i class="fas fa-times"></i>Cancel
+            </a>
+          </div>
+        </form>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Category</label>
-        <select name="category_id" class="form-control">
-          <% categories.forEach(c => { %>
-            <option value="<%= c.id %>" <%= transaction.category_id === c.id ? 'selected' : '' %>><%= c.category_name %></option>
-          <% }) %>
-        </select>
+
+      <div class="form-footer">
+        <p>Make changes and save them</p>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Description</label>
-        <input type="text" name="description" class="form-control" value="<%= transaction.description %>">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Date & Time</label>
-        <input type="datetime-local" name="transaction_time" class="form-control" value="<%= new Date(transaction.transaction_time).toISOString().slice(0,16) %>" required>
-      </div>
-      <button class="btn btn-success">Update</button>
-    </form>
+    </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Unavailable | SpendSmart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --primary: #6b7280;
+      --accent: #4b5563;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --border: #d1d5db;
+      --warning: #f97316;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .unavailable-container {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .unavailable-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      overflow: hidden;
+      animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .unavailable-header {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .unavailable-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .unavailable-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .unavailable-header p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+      margin: 0;
+    }
+
+    .unavailable-body {
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .unavailable-body h2 {
+      font-size: 1.5rem;
+      color: var(--dark);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .unavailable-body p {
+      color: var(--primary);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-info {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(234, 88, 12, 0.1) 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      border-left: 4px solid var(--warning);
+    }
+
+    .status-info strong {
+      color: var(--warning);
+    }
+
+    .timeline {
+      text-align: left;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--light);
+      border-radius: 12px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-title {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-desc {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-back {
+      background: white;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-email {
+      background: var(--warning);
+      color: white;
+      border: 2px solid var(--warning);
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-email:hover {
+      background: #ea580c;
+      border-color: #ea580c;
+    }
+
+    .contact-info {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--light);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .contact-info a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .unavailable-header {
+        padding: 2rem 1.5rem;
+      }
+
+      .unavailable-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .unavailable-icon {
+        font-size: 3rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-back, .btn-email {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="unavailable-container">
+    <div class="unavailable-card">
+      <!-- Header -->
+      <div class="unavailable-header">
+        <div class="unavailable-icon">
+          <i class="fas fa-hourglass-end"></i>
+        </div>
+        <h1>Payment Gateway Unavailable</h1>
+        <p>Razorpay Integration in Progress</p>
+      </div>
+
+      <!-- Body -->
+      <div class="unavailable-body">
+        <h2>We're Setting Up Secure Payments</h2>
+        <p><%= message %></p>
+
+        <!-- Status Info -->
+        <div class="status-info">
+          <i class="fas fa-info-circle me-2"></i>
+          <strong>Expected Timeline:</strong> 3-4 business days
+        </div>
+
+        <!-- What's Happening -->
+        <div class="timeline">
+          <h5 style="color: var(--dark); margin-bottom: 1.5rem; font-weight: 700;">
+            <i class="fas fa-cog me-2"></i>Setup Progress
+          </h5>
+          
+          <div class="timeline-item">
+            <div class="timeline-icon">✓</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Integration Completed</div>
+              <div class="timeline-desc">Razorpay SDK integrated into SpendSmart</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Account Verification (In Progress)</div>
+              <div class="timeline-desc">Razorpay is verifying your account details</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Keys Activation</div>
+              <div class="timeline-desc">API keys will be provided after verification</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">⏳</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Payment Feature Live</div>
+              <div class="timeline-desc">Secure payments will be available</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alternative -->
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #10b981;">
+          <p style="color: #047857; margin-bottom: 0;">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>For Now:</strong> You can still add transactions directly. Once the payment gateway is activated, payment records will be added automatically.
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <a href="/" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+          <a href="/add" class="btn-back">
+            <i class="fas fa-plus-circle"></i> Add Transaction
+          </a>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <p style="margin-bottom: 0;">
+            <i class="fas fa-question-circle me-2"></i>
+            Questions? Contact us at: <a href="mailto:support@spendsmart.com">support@spendsmart.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
