@@ -104,8 +104,7 @@ A modern personal finance management application that helps users track expenses
 
 4. **Start the application**
    ```bash
-   1. npm i
-   2. node index1.js
+   1. node index1.js
    ```
    The application will run on `http://localhost:3000`
 
